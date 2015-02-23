@@ -1,136 +1,158 @@
-/*
-  Print.cpp - Base class that provides print() and println()
-  Copyright (c) 2008 David A. Mellis.  All right reserved.
- 
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
+/* Print.h copyright notice
 
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
+  Copyright (c) 2015 Michael Jonker. All right reserved.
 
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  "THE BEER-WARE LICENSE" (Revision 42++)  http://en.wikipedia.org/wiki/Beerware
+  Michael Jonker <EBPISTC: 52.36040, 4.87001, NAP+5, -493899258> wrote this file.
 
-  Modified 21 December 2014 by Michael Jonker. Enhanced with fieldControl parameter, implemented many methods through templates definitions
+  As long as you retain this notice you can can redistribute it and/or modify it
+  under the terms of the GNU Lesser General Public License as published by the
+  Free Software Foundation; either version 2.1 of the License, or (at your option)
+  any later version.
+  If we meet some day, and you think this stuff is worth it, you can buy me a beer in return.
+
+  This code is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+  For a copy of the GNU Lesser General Public License write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
+
+  This code replaces the version of David A. Mellis.
 */
 
-/* fieldControl enhancements added by Michael Jonker (beer-ware licensed enhancements)
-
-Enhanced the formatting capabilities of the print methods. The optional third
-parameter of the print() methods allows to control the print output format in
-terms of minimum field width, filling character selection and sign forcing.
-
-The recommended way of creating the fieldControl parameter is to use the fieldControl method, which has the following signature :
-Print::fieldControl(unsigned char size, bool fillZeroes=false, bool forceSign=false);
-
-Examples:
-Serial.print("answer=");   Serial.println( 42);                                          // answer=42
-Serial.print("answer=");   Serial.println( 42, 0, Print::fieldControl(4));               // answer=  42
-Serial.print("answer=");   Serial.println(137, 0, Print::fieldControl(4));               // answer= 137
-Serial.print("answer=");   Serial.println(137, 0, Print::fieldControl(4,false, true));   // answer= +137
-
-Serial.print("answer=0x"); Serial.println((unsigned) 0xcafe, Print::Radix_HEX, Print::fieldControl(8, true) ); // answer=0x0000cafe
-Serial.print("answer=");   Serial.println((unsigned) 0xcafe, Print::Radix_HEX, Print::fieldControl(6) );       // answer=  cafe
-Serial.print("answer=");   Serial.println(  (signed) 0xcafe, Print::Radix_HEX, Print::fieldControl(6) );       // answer= -3502
-
-const unsigned char myFieldControl = Print::fieldControl(6, false, true );
-Serial.print("answer=");   Serial.println(  (signed) 0xcafe, Print::Radix_HEX, myFieldControl);                // answer=  -3502
-Serial.print("answer=");   Serial.println((unsigned) 0xcafe, Print::Radix_HEX, myFieldControl);                // answer=  +cafe
-
-The field control parameter can also be used for floating numbers to control the format of the integral part:
-const unsigned char myFieldControl = Print::fieldControl(4, true, true );
-Serial.print("answer=");   Serial.println(41.987654321, 0, myFieldControl);   // answer=+0042
-Serial.print("answer=");   Serial.println(41.987654321, 1, myFieldControl);   // answer=+0042.0
-Serial.print("answer=");   Serial.println(41.987654321, 2, myFieldControl);   // answer=+0041.99
-Serial.print("answer=");   Serial.println(41.987654321, 3, myFieldControl);   // answer=+0041.988
-Serial.print("answer=");   Serial.println(41.987654321, 4, myFieldControl);   // answer=+0041.9877
-Serial.print("answer=");   Serial.println(41.987654321, 5, myFieldControl);   // answer=+0041.98765
+/* Print.h short description
+   this code defines the Print class and provides the implementation of the trivial methods of this class.
 */
 
-#ifndef Print_h
+#ifndef Print_h // == Print.h =====================================================================================================
 #define Print_h
 
+#include <stddef.h>
 #include <inttypes.h>
-#include <stdio.h> // for size_t
 
 #include "WString.h"
 #include "Printable.h"
+#include "PrintFormat.h"
+namespace ArduinoPrint
+{
+  static const PrintFormat   FIELDSIZE(unsigned char number) { return   PrintFormat::FIELDSIZE(number); }
+  static const IntegerFormat RADIX    (unsigned char number) { return IntegerFormat::RADIX    (number); }
+  static const FloatFormat   PRECISION(unsigned char number) { return   FloatFormat::PRECISION(number); }
 
-// deprecated: use PRINT::Radix_DEC etc.
-#define DEC Print::Radix_DEC
-#define HEX Print::Radix_HEX
-#define OCT Print::Radix_OCT
-#define BIN Print::Radix_BIN
+  static const PrintFormat   STRICTSIZE = PrintFormat::STRICTSIZE;
+  static const PrintFormat   FILLZEROS  = PrintFormat::FILLZEROS;
+  static const PrintFormat   FORCESIGN  = PrintFormat::FORCESIGN;
+  static const IntegerFormat ALIGNLEFT  = IntegerFormat::ALIGNLEFT;
+  static const IntegerFormat BIN = RADIX( 2);
+  static const IntegerFormat OCT = RADIX( 8);
+  static const IntegerFormat DEC = RADIX(10);
+  static const IntegerFormat HEX = RADIX(16);
 
-// deprecated: use PRINT::fieldControl etc.
-#define PFCTL(_size, _fillZeroes, _forceSign) Print::fieldControl(_size, _fillZeroes, _forceSign)
+// these are defined in some standard include file...
+  static const char NEWLINE = '\n';
+  static const char endl    = '\n';      // defined in: #include <iostream>; using namespace std;  
+};
+using namespace ArduinoPrint;
 
+class PrintSequence;
 class Print
 {
-  public:
-    const static int Radix_HEX=16;
-    const static int Radix_DEC=10;
-    const static int Radix_OCT= 8;
-    const static int Radix_BIN= 2;
-
-    // fieldControl parameter layout:
-    static const unsigned char m_fieldSizeMask = 0x1f; /* gives the fieldsize -1 of the entry to be printed */
-    static const unsigned char m_fillZeroes    = 0x20; /* if true fill with '0', if not fill with ' '  */
-    static const unsigned char m_forceSign     = 0x40; /* if true force sign symbol, including for positive values */
-    static const unsigned char m_signedItem    = 0x80; /* forces the value as a signed item (reserved for internal use) */
-    static const unsigned char inline fieldControl(unsigned char size, bool fillZeroes=false, bool forceSign=false)
-    {
-      return ( (size==0? 0: size>m_fieldSizeMask ? m_fieldSizeMask:size-1) | (fillZeroes ? m_fillZeroes:0) | (forceSign ? m_forceSign:0) );
-    }
-
   private:
     int write_error;
-    size_t printNumber(unsigned long n, unsigned char base, unsigned char fieldControl);
-    size_t printFloat( double number, uint8_t digits, uint8_t fieldControl);
+    size_t printString      (const char*   value, unsigned int size, unsigned int formatControl);
+    size_t printNumber      (unsigned long value, unsigned int formatControl);
+    size_t printSignedNumber(  signed long value, unsigned int formatControl);
+    size_t printFloat       (double        value, unsigned int formatControl);
+//  size_t printExpon       (double        value, unsigned int formatControl);
 
   protected:
-    void setWriteError(int err = 1) { write_error = err; }
+    inline void setWriteError(int err = 1) { write_error = err; }
+
   public:
-    Print() : write_error(0) {}
-  
-    int getWriteError() { return write_error; }
-    void clearWriteError() { setWriteError(0); }
 
-    virtual size_t write(uint8_t) = 0;
-    inline  size_t write(const char *str) {
-      if (str == NULL) return 0;
-      return write((const uint8_t *)str, strlen(str));
-    }
-    virtual size_t write(const uint8_t *buffer, size_t size);
-    inline  size_t write(const char    *buffer, size_t size) {
-      return write((const uint8_t *)buffer, size);
-    }
+    inline Print() : write_error(0)  {}
 
+    inline int  getWriteError()      { return write_error; }
+    inline void clearWriteError()    { setWriteError(0); }
+
+    inline size_t printPadding(char value,  unsigned char length)
+    {
+      for(unsigned char nc = length; nc!=0; nc--) write(value);
+      return length;
+    }
+    inline size_t printPattern(char* value, unsigned char length, unsigned char offset=0)
+    {
+      char* cp = value+offset;
+      for(unsigned char nc = length; nc!=0; nc--) { write(*cp); cp = *(cp+1) ? cp+1 : value; }
+      return length;
+    }
+    inline size_t printPadding(char  value,             signed char length                        ) { return length>0 ? printPadding(value,           (unsigned char) length        ) : 0; }
+    inline size_t printPadding(char  value,             signed int  length                        ) { return length>0 ? printPadding(value,           (unsigned char) length        ) : 0; }
+    inline size_t printPadding(char  value,           unsigned int  length                        ) { return            printPadding(value,           (unsigned char) length        )    ; }
+    inline size_t printPattern(char* pattern,           signed char length, unsigned char offset=0) { return length>0 ? printPattern(pattern,         (unsigned char) length, offset) : 0; }
+    inline size_t printPattern(char* pattern,           signed int  length, unsigned char offset=0) { return length>0 ? printPattern(pattern,         (unsigned char) length, offset) : 0; }
+    inline size_t printPattern(char* pattern,         unsigned int  length, unsigned char offset=0) { return            printPattern(pattern,         (unsigned char) length, offset)    ; }
+    inline size_t printPattern(const String& pattern,   signed char length, unsigned char offset=0) { return length>0 ? printPattern(pattern.c_str(), (unsigned char) length, offset) : 0; }
+    inline size_t printPattern(const String& pattern,   signed int  length, unsigned char offset=0) { return length>0 ? printPattern(pattern.c_str(), (unsigned char) length, offset) : 0; }
+    inline size_t printPattern(const String& pattern, unsigned int  length, unsigned char offset=0) { return            printPattern(pattern.c_str(), (unsigned char) length, offset)    ; }
+    // TODO simply with templates
+
+    PrintSequence getPrintSequence();
+
+//  virtual methods that must/can be provided by the extending class
+    virtual size_t write(uint8_t) = 0;                          // pure virtual, must be provided
+    virtual size_t write(const uint8_t *buffer, size_t size);   // locally defined, can be overridden
+
+//  these methods are not inlined as the space penalty for inlining a virtual method call is non negligible
+    size_t print(char          item);
+    size_t print(const char*   item, size_t size);
     size_t print(const __FlashStringHelper* item);
 
-    inline size_t print(const String& item  ) { return write(item.c_str(), item.length()); }
-    inline size_t print(const char    item[]) { return write(item);}
-    inline size_t print(char          item  ) { return write(item);}
+//  all other print methods are inlined calls to others print() methods or to Print private methods.
 
-    inline size_t print(unsigned char item, unsigned char radix = Radix_DEC, unsigned char fieldControl = 0) { return printNumber((unsigned long)item, radix, fieldControl);}
-    inline size_t print(unsigned int  item, unsigned char radix = Radix_DEC, unsigned char fieldControl = 0) { return printNumber((unsigned long)item, radix, fieldControl);}
-    inline size_t print(unsigned long item, unsigned char radix = Radix_DEC, unsigned char fieldControl = 0) { return printNumber((unsigned long)item, radix, fieldControl);}
-    inline size_t print(         int  item, unsigned char radix = Radix_DEC, unsigned char fieldControl = 0) { return printNumber((unsigned long)item, radix, fieldControl|m_signedItem);}
-    inline size_t print(         long item, unsigned char radix = Radix_DEC, unsigned char fieldControl = 0) { return printNumber((unsigned long)item, radix, fieldControl|m_signedItem);}
-    
-    inline size_t print(double        item, unsigned char digits = 2,        unsigned char fieldControl = 0) { return printFloat(item, digits, fieldControl);}
-    inline size_t print(const Printable& item)                                                               { return item.printTo(*this);}
+    inline size_t print(uint8_t*       item, size_t size, const PrintFormat& format=PrintFormat::DEFAULT) { return printString((char*)item,  size,          format.getFormatControl()); }
+    inline size_t print(const char*    item, size_t size, const PrintFormat& format=PrintFormat::DEFAULT) { return printString(item,         size,          format.getFormatControl()); }
+    inline size_t print(const char*    item,              const PrintFormat& format=PrintFormat::DEFAULT) { return printString(item,         strlen(item),  format.getFormatControl()); }
+    inline size_t print(const String&  item,              const PrintFormat& format=PrintFormat::DEFAULT) { return printString(item.c_str(), item.length(), format.getFormatControl()); }
+    //TODO fix make a printFlashString(item, format)
+    inline size_t print(const __FlashStringHelper* item,  const PrintFormat& format/*=PrintFormat::DEFAULT */) { return print(item); }
 
-                          inline size_t println(void)                                                        { return                                    print('\n'); }
-    template <typename R> inline size_t println(R item                                                     ) { return print(item)                      + print('\n'); }
-    template <typename R> inline size_t println(R item, unsigned char radix, unsigned char fieldControl= 0 ) { return print(item, radix, fieldControl) + print('\n'); }
-//  note one cannot combine the two above templates in one by giving a default for radix, this makes matching of print() ambiguous for R=char*, and others
+    //TODO templatify (if possible)
+    inline size_t print(unsigned char item, const IntegerFormat& format=DEC)          { return printNumber((unsigned long)item, format.getFormatControl() ); }
+    inline size_t print(unsigned  int item, const IntegerFormat& format=DEC)          { return printNumber((unsigned long)item, format.getFormatControl() ); }
+    inline size_t print(unsigned long item, const IntegerFormat& format=DEC)          { return printNumber((unsigned long)item, format.getFormatControl() ); }
+    inline size_t print(          int item, const IntegerFormat& format=DEC)          { return printSignedNumber(   (long)item, format.getFormatControl() ); }
+    inline size_t print(         long item, const IntegerFormat& format=DEC)          { return printSignedNumber(   (long)item, format.getFormatControl() ); }
+    inline size_t print(       double item, const   FloatFormat& format=PRECISION(2)) { return printFloat(item, format.getFormatControl() ); }
+
+    inline size_t print(unsigned char item, const   PrintFormat& format    )          { return printNumber((unsigned long)item, format.getFormatControl() ); }
+    inline size_t print(unsigned  int item, const   PrintFormat& format    )          { return printNumber((unsigned long)item, format.getFormatControl() ); }
+    inline size_t print(unsigned long item, const   PrintFormat& format    )          { return printNumber((unsigned long)item, format.getFormatControl() ); }
+    inline size_t print(          int item, const   PrintFormat& format    )          { return printSignedNumber(   (long)item, format.getFormatControl() ); }
+    inline size_t print(         long item, const   PrintFormat& format    )          { return printSignedNumber(   (long)item, format.getFormatControl() ); }
+    inline size_t print(       double item, const   PrintFormat& format    )          { return printFloat(item, format.getFormatControl() ); }
+
+    inline size_t print(const Printable& item)                                        { return item.printTo(*this);}
+
+    // backward compatible calls:
+    inline size_t print(unsigned char item, unsigned char radix)  { return printNumber((unsigned long)item, RADIX(radix).getFormatControl() ); }
+    inline size_t print(unsigned  int item, unsigned char radix)  { return printNumber((unsigned long)item, RADIX(radix).getFormatControl() ); }
+    inline size_t print(unsigned long item, unsigned char radix)  { return printNumber((unsigned long)item, RADIX(radix).getFormatControl() ); }
+    inline size_t print(          int item, unsigned char radix)  { return printSignedNumber(   (long)item, RADIX(radix).getFormatControl() ); }
+    inline size_t print(         long item, unsigned char radix)  { return printSignedNumber(   (long)item, RADIX(radix).getFormatControl() ); }
+    inline size_t print(       double item, unsigned char digits) { return printFloat(item, PRECISION(digits).getFormatControl());}
+
+//  define println() methods by template
+                          inline size_t println(void)                                 { return                                    print('\n'); }
+    template <typename R> inline size_t println(R item                              ) { return print(item)         + print('\n'); }
+    template <typename R> inline size_t println(R item, const PrintFormat&   format ) { return print(item, format) + print('\n'); }
+    template <typename R> inline size_t println(R item, const IntegerFormat& format ) { return print(item, format) + print('\n'); }
+    template <typename R> inline size_t println(R item, const FloatFormat&   format ) { return print(item, format) + print('\n'); }
+    template <typename R> inline size_t println(R item, unsigned char extra) { return print(item, extra) + print('\n'); }
+//  TODO: see if we can remove the first templates by giving a default for PrintFormat without making print() ambiguous for R=char*, ...
 
 };
 
-#endif
+#endif //Print_h ==================================================================================================================
+
+// eof
