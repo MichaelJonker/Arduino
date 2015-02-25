@@ -171,10 +171,15 @@ int main()
 void printSequenceTeaser()
 {
   Serial.print(F("\nrunning PrintSequence teaser... ===========================================================================\n"));
-  Serial.print(F("\nSerial.getPrintSequence()<<\"one \"<<1<<\" two=\"<<2.1<<NEWLINE<<\" etc, all in one sequence...\"\n"));
 
   int n;
-  n = Serial.getPrintSequence()<<"one "<<1<<", two="<<2.1<<NEWLINE<<" etc, all in one sequence...\n"
+
+  PrintSequence mps(Serial);  // alternative PrintSequence mps=Serial.getPrintSequence();
+  Serial.println(F("n = mps<<\"Hi, one=\"<<1<<NEWLINE<<\"two dot two =\"<<2.2<<NEWLINE<<\"or to be more precise\"<<PRECISION(2)<<FIELDSIZE(4)<<2.2<<EndSequence();"));
+                    n = mps<<"Hi, one="<<1<<NEWLINE<<"two dot two ="<<2.2<<NEWLINE<<"or to be more precise"<<PRECISION(2)<<FIELDSIZE(4)<<2.2<<EndSequence();
+
+  Serial.print(F("\n\nSerial.getPrintSequence()<<\"one \"<<1<<\" two=\"<<2.1<<NEWLINE<<\" etc, all in one sequence...\"\n"));
+                  n = Serial.getPrintSequence()<<"one "<<1<<", two="<<2.1<<NEWLINE<<" etc, all in one sequence...\n"
   <<F(" one:   ") <<   "Waar eens de boterbloepjes bloeiden, staat nu een ma-af palei   (s)\n"
   <<F(" F()'d: ") << F("Waar eens het geld werd uitgevonden, trap ik nu in de hondepoe  (p)\n")
   <<" <<2    : " <<2<<'\n'
@@ -207,7 +212,7 @@ void printSequenceTeaser()
   // TODO introduce StartSequence ??
 
 
-  Serial.println("\nPrintSequence using a custom endsequence:");
+  Serial.println("\nPrintSequence using a custom EndSequence:");
   n = Serial.getPrintSequence()<<"{\n"
   << F(" ach zal de mensheid ooit eens leren, te leven zonder bruut geweld...  ") <<NEWLINE
   << F(" etc... waar moet dat heen, hoe zal dat gaan, waar komt die rotsooi toch vandaan") <<NEWLINE

@@ -27,6 +27,20 @@ void printTest()
 {
   unsigned int nc;
   unsigned int i;
+  
+  Serial.println(F("The new version of the Print class allows you to code things like:"));
+  Serial.print(F("Serial.print(3.141592, PRECISION(4) & FIELDSIZE(3));  // "));
+                  Serial.print(3.141592, PRECISION(4) & FIELDSIZE(3));                Serial.println(F(" ; note FIELDSIZE only affects the integer part of the number"));
+  Serial.print(F("Serial.print(66, HEX); // "));
+                  Serial.print(66, HEX);                                              Serial.println();
+  Serial.print(F("Serial.print(22, RADIX(5) & FIELDSIZE(8) & ALIGNLEFT); // "));
+                  Serial.print(22, RADIX(5) & FIELDSIZE(8) & ALIGNLEFT);              Serial.println();
+  Serial.print(F("Serial.print(34, OCT & FIELDSIZE(8) & FORCESIGN & FILLZEROS); // "));
+                  Serial.print(34, OCT & FIELDSIZE(8) & FORCESIGN & FILLZEROS);       Serial.println();
+  Serial.print(F("Serial.print(54, 13); // "));
+                  Serial.print(54, 13);                                               Serial.println(F(" ; backward compatible base argument"));
+  Serial.print(F("Serial.print(3.141592, 3); // "));
+                  Serial.print(3.141592, 3);                                          Serial.println(F(" ; backward compatible precision argument"));
 
   Serial.println(F("\nRadix test, looping from radix 0 .. 34 (0x22)"));
   IntegerFormat di = HEX & FIELDSIZE(2) & FILLZEROS;
