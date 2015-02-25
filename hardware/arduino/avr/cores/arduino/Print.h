@@ -59,11 +59,13 @@ class Print
 {
   private:
     int write_error;
-    size_t printString      (const char*   value, unsigned int size, unsigned int formatControl);
-    size_t printNumber      (unsigned long value, unsigned int formatControl);
-    size_t printSignedNumber(  signed long value, unsigned int formatControl);
-    size_t printFloat       (double        value, unsigned int formatControl);
-//  size_t printExpon       (double        value, unsigned int formatControl);
+    size_t printString           (const char*   value, unsigned int size, unsigned int formatControl);
+    size_t printNumber           (unsigned long value, unsigned int formatControl);
+    size_t printFloat            (double        value, unsigned int formatControl);
+    size_t printExpon            (double        value, unsigned int formatControl);
+    inline size_t printSignedNumber(signed long value, unsigned int formatControl) { if(value<0) { value=-value; formatControl |= PrintFormat::m_IsNegative; }
+                                                                                     return printNumber((unsigned long)value, formatControl); }
+
 
   protected:
     inline void setWriteError(int err = 1) { write_error = err; }
@@ -110,12 +112,12 @@ class Print
 
 //  all other print methods are inlined calls to others print() methods or to Print private methods.
 
-    inline size_t print(uint8_t*       item, size_t size, const PrintFormat& format=PrintFormat::DEFAULT) { return printString((char*)item,  size,          format.getFormatControl()); }
-    inline size_t print(const char*    item, size_t size, const PrintFormat& format=PrintFormat::DEFAULT) { return printString(item,         size,          format.getFormatControl()); }
-    inline size_t print(const char*    item,              const PrintFormat& format=PrintFormat::DEFAULT) { return printString(item,         strlen(item),  format.getFormatControl()); }
-    inline size_t print(const String&  item,              const PrintFormat& format=PrintFormat::DEFAULT) { return printString(item.c_str(), item.length(), format.getFormatControl()); }
+    inline size_t print(uint8_t*       item, size_t size, const PrintFormat& format=PrintFormat::DEFAULTPF) { return printString((char*)item,  size,          format.getFormatControl()); }
+    inline size_t print(const char*    item, size_t size, const PrintFormat& format=PrintFormat::DEFAULTPF) { return printString(item,         size,          format.getFormatControl()); }
+    inline size_t print(const char*    item,              const PrintFormat& format=PrintFormat::DEFAULTPF) { return printString(item,         strlen(item),  format.getFormatControl()); }
+    inline size_t print(const String&  item,              const PrintFormat& format=PrintFormat::DEFAULTPF) { return printString(item.c_str(), item.length(), format.getFormatControl()); }
     //TODO fix make a printFlashString(item, format)
-    inline size_t print(const __FlashStringHelper* item,  const PrintFormat& format/*=PrintFormat::DEFAULT */) { return print(item); }
+    inline size_t print(const __FlashStringHelper* item,  const PrintFormat& format/*=PrintFormat::DEFAULTPF */) { return print(item); }
 
     //TODO templatify (if possible)
     inline size_t print(unsigned char item, const IntegerFormat& format=DEC)          { return printNumber((unsigned long)item, format.getFormatControl() ); }

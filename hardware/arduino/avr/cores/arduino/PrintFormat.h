@@ -65,7 +65,7 @@ public:
   static const PrintFormat STRICTSIZE;
   static const PrintFormat FILLZEROS;
   static const PrintFormat FORCESIGN;
-  static const PrintFormat DEFAULT;
+  static const PrintFormat DEFAULTPF;
 };
 
 
@@ -115,11 +115,15 @@ public:
    inline const invalid_PrintFormat_operation operator& (const FloatFormat&   lhs, const IntegerFormat& rhs);
 #endif
 
+#ifdef _define_static_PrintFormat_instances
+// this is my way (and choice) to keep implementation and definition in the same file.
+// the macro _define_static_PrintFormat_instances is #defined in one .cpp file (either PrintFormat.cpp or Print.cpp) before the #include of this header file.
 const PrintFormat     PrintFormat::STRICTSIZE(m_StrictSize);
 const PrintFormat     PrintFormat::FILLZEROS (m_FillZeros);
 const PrintFormat     PrintFormat::FORCESIGN (m_ForceSign);
-const PrintFormat     PrintFormat::DEFAULT   (0);
+const PrintFormat     PrintFormat::DEFAULTPF (0);
 const IntegerFormat IntegerFormat::ALIGNLEFT (m_AlignLeft);
+#endif // _define_static_PrintFormat_instances
 
 #endif // PrintFormat_h ===========================================================================================================
 

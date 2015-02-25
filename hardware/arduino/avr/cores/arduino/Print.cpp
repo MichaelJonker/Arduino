@@ -24,6 +24,8 @@
    this code provides the implementation of the non trivial methods of the Print class.
 */
 
+#define _define_static_PrintFormat_instances // force declaration of static PrintFormat instances here (in PrintFromat.h included from Print.h)
+
 #include "Print.h"
 #include <math.h>
 
@@ -92,12 +94,6 @@ size_t Print::printString(const char* cstr, unsigned int size, unsigned int form
   if( fillControl == (PrintFormat::m_AlignLeft                         )) nchar+=printPadding(' ', fillLen);
 
   return nchar;
-}
-
-inline size_t Print::printSignedNumber(signed long n, unsigned int formatControl)
-{
-  if(n<0) { n=-n; formatControl |= PrintFormat::m_IsNegative; }
-  return printNumber((unsigned)n, formatControl);
 }
 
 size_t Print::printNumber(unsigned long n, unsigned int formatControl)
