@@ -180,7 +180,7 @@ void printSequenceTeaser()
 
   Serial.print(F("\n\nSerial.getPrintSequence()<<\"one \"<<1<<\" two=\"<<2.1<<NEWLINE<<\" etc, all in one sequence...\"\n"));
                   n = Serial.getPrintSequence()<<"one "<<1<<", two="<<2.1<<NEWLINE<<" etc, all in one sequence...\n"
-  <<F(" one:   ") <<   "Waar eens de boterbloepjes bloeiden, staat nu een ma-af palei   (s)\n"
+  <<F(" one:   ") << F("Waar eens de boterbloempjes bloeiden, staat nu een ma-af palei  (s)\n")
   <<F(" F()'d: ") << F("Waar eens het geld werd uitgevonden, trap ik nu in de hondepoe  (p)\n")
   <<" <<2    : " <<2<<'\n'
   <<" <<3<<4 : " <<3<<4<<'\n'
@@ -190,10 +190,10 @@ void printSequenceTeaser()
   <<F(" << FIELDSIZE(4) << STRICTSIZE                 << 123456.54321 : ")<<  FIELDSIZE(4) << STRICTSIZE                  <<123456.54321<<'\n'
   <<F(" <<(FIELDSIZE(4) &  STRICTSIZE &  PRECISION(4))<< 123456.54321 : ")<< (FIELDSIZE(4) &  STRICTSIZE &  PRECISION(4)) <<123456.54321<<'\n'
   <<F(" << FIELDSIZE(4) << STRICTSIZE << PRECISION(4) << 123456.54321 : ")<<  FIELDSIZE(4) << STRICTSIZE << PRECISION(4)  <<123456.54321<<'\n'
-  <<F(" <<(FIELDSIZE(4) &  STRICTSIZE &  HEX         )<< 123456.54321 : ")<< (FIELDSIZE(4) &  STRICTSIZE &  HEX         ) <<123456.54321<<" // this is not nice, HEX is interpreted as PRECISION(16)!\n"
-  <<F(" << FIELDSIZE(4) << STRICTSIZE << HEX          << 123456.54321 : ")<<  FIELDSIZE(4) << STRICTSIZE << HEX           <<123456.54321<<" // this is not nice, HEX is interpreted as PRECISION(16)!\n"
-  <<F(" << HEX << FIELDSIZE(4) << STRICTSIZE << PRECISION(4) <<123456.54321 : ")<<  HEX << FIELDSIZE(4) << STRICTSIZE << PRECISION(4) <<123456.54321<<" // idem and in this context HEX is merged (hence overridden) with PRECISION()\n"
-  <<F(" << FIELDSIZE(4) << STRICTSIZE << PRECISION(4) << HEX <<123456.54321 : ")<<  FIELDSIZE(4) << STRICTSIZE << PRECISION(4) << HEX <<123456.54321<<" // and vice versa\n"
+  <<F(" <<(FIELDSIZE(4) &  STRICTSIZE &  HEX         )<< 123456.54321 : ")<< (FIELDSIZE(4) &  STRICTSIZE &  HEX         ) <<123456.54321<<F(" // this is not nice, HEX is interpreted as PRECISION(16)!\n")
+  <<F(" << FIELDSIZE(4) << STRICTSIZE << HEX          << 123456.54321 : ")<<  FIELDSIZE(4) << STRICTSIZE << HEX           <<123456.54321<<F(" // idem\n")
+  <<F(" << HEX << FIELDSIZE(4) << STRICTSIZE << PRECISION(4) <<123456.54321 : ")<<  HEX << FIELDSIZE(4) << STRICTSIZE << PRECISION(4) <<123456.54321<<F(" // idem and in this context HEX is merged (hence overridden) with PRECISION()\n")
+  <<F(" << FIELDSIZE(4) << STRICTSIZE << PRECISION(4) << HEX <<123456.54321 : ")<<  FIELDSIZE(4) << STRICTSIZE << PRECISION(4) << HEX <<123456.54321<<F(" // and vice versa\n")
   <<F(" << F(\" I am working on a solution\\n\")  :")<<F(" I am working on a solution\n")
 //<<" float9 "<<  FIELDSIZE(4) &  STRICTSIZE & PRECISION(4)  <<123456.54321<<'\n' // error : no match for ?operator&? (operand types are ?PrintSequence? and ?const PrintFormat?)
 //<<" floatA "<< (3.4 << FIELDSIZE(8) & STRICTSIZE) <<'\n'                        // error : no match for ?operator<<? (operand types are ?double? and ?const PrintFormat?)
@@ -215,9 +215,10 @@ void printSequenceTeaser()
   Serial.println("\nPrintSequence using a custom EndSequence:");
   n = Serial.getPrintSequence()<<"{\n"
   << F(" ach zal de mensheid ooit eens leren, te leven zonder bruut geweld...  ") <<NEWLINE
-  << F(" etc... waar moet dat heen, hoe zal dat gaan, waar komt die rotsooi toch vandaan") <<NEWLINE
-  << F(" to appreciate this, you should see the next line in the code and output\n")
-  << F(" << myEndSequence;\n") << myEndSequence;
+  << F(" enz... ") <<NEWLINE
+  << F(" waar moet dat heen, hoe zal dat gaan, waar komt die rotsooi toch vandaan") <<NEWLINE <<NEWLINE
+  << F(" to appreciate this, you should see what myEndSequence adds to the output\n")
+  << myEndSequence;
 
   PrintSequence out(Serial);
   out<<" : "<<n <<" characters printed\n";
