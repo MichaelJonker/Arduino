@@ -75,14 +75,14 @@ class HardwareSerial : public Print
   }
 } Serial;
 
-void PrintDemo(); // forward definition
+void printDemo(); // forward definition
 
 int main()
 {
-  PrintDemo();
+  printDemo();
 }
-
 #include "Print.cpp"
+
 
 #else
 
@@ -97,7 +97,7 @@ void printDemo()
 {
   unsigned int nc;
   unsigned int i;
-  Serial.println(F("\nrunning PrintDemo... ======================================================================================\n"));
+  Serial.println(F("\nrunning printDemo... ======================================================================================\n"));
   
   Serial.println(F("The new version of the Print class allows you to code things like:"));
   Serial.print(F("Serial.print(3.141592, PRECISION(4) & FIELDSIZE(3));          // "));
@@ -129,7 +129,7 @@ void printDemo()
   Serial.println(F("\nPrecision test looping over precisison and complemented with Serial.printPattern((char*) \" - -.- - |\", 42-nc, nc%10)"));
   IntegerFormat df = DEC & FIELDSIZE(2);
   PrintFormat   tf = FIELDSIZE(8);
-  for(i=3; i<32; i++)
+  for(i=0; i<32; i++)
   {
     Serial.print( i, df);
     nc =Serial.print(41.9876543210987654321098765432109876543210, tf & PRECISION( i) );
@@ -154,34 +154,34 @@ void printDemo()
   {
   nc=Serial.println("test positive float overflow (Note, ovf corresponds to float that cannot be represented as a long) this will be resolved by a future Scientific format)");
   FloatFormat ff = FIELDSIZE(15) & PRECISION(2);
-  nc=Serial.print("0x"); nc +=Serial.print(      0xffffff60u, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print(      0xffffff60u); nc +=Serial.print( float(0xffffff60u), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print(      0xffffff70u, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print(      0xffffff70u); nc +=Serial.print( float(0xffffff70u), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print(      0xffffff7fu, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print(      0xffffff7fu); nc +=Serial.print( float(0xffffff7fu), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print(      0xffffff80u, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print(      0xffffff80u); nc +=Serial.print( float(0xffffff80u), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print(      0xffffff81u, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print(      0xffffff81u); nc +=Serial.print( float(0xffffff81u), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print(      0xffffff90u, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print(      0xffffff90u); nc +=Serial.print( float(0xffffff90u), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print(      0xffffffa0u, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print(      0xffffffa0u); nc +=Serial.print( float(0xffffffa0u), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print(      0xfffffff0u, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print(      0xfffffff0u); nc +=Serial.print( float(0xfffffff0u), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print(      0xffffffffu, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print(      0xffffffffu); nc +=Serial.print( float(0xffffffffu), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xffffff60, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print("  "); nc +=Serial.print(             0xffffff60, FIELDSIZE(10)); nc +=Serial.print(   float(0xffffff60), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xffffff70, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print("  "); nc +=Serial.print(             0xffffff70, FIELDSIZE(10)); nc +=Serial.print(   float(0xffffff70), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xffffff7f, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print("  "); nc +=Serial.print(             0xffffff7f, FIELDSIZE(10)); nc +=Serial.print(   float(0xffffff7f), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xffffff80, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print("  "); nc +=Serial.print(             0xffffff80, FIELDSIZE(10)); nc +=Serial.print(   float(0xffffff80), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xffffff81, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print("  "); nc +=Serial.print(             0xffffff81, FIELDSIZE(10)); nc +=Serial.print(   float(0xffffff81), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xffffff90, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print("  "); nc +=Serial.print(             0xffffff90, FIELDSIZE(10)); nc +=Serial.print(   float(0xffffff90), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xffffffa0, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print("  "); nc +=Serial.print(             0xffffffa0, FIELDSIZE(10)); nc +=Serial.print(   float(0xffffffa0), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xfffffff0, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print("  "); nc +=Serial.print(             0xfffffff0, FIELDSIZE(10)); nc +=Serial.print(   float(0xfffffff0), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xffffffff, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print("  "); nc +=Serial.print(             0xffffffff, FIELDSIZE(10)); nc +=Serial.print(   float(0xffffffff), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
   nc=Serial.println("test negative float overflow");
-  nc=Serial.print("0x"); nc +=Serial.print(      0xffffff60u, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print(      0xffffff60u); nc +=Serial.print(-float(0xffffff60u), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print(      0xffffff70u, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print(      0xffffff70u); nc +=Serial.print(-float(0xffffff70u), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print(      0xffffff7fu, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print(      0xffffff7fu); nc +=Serial.print(-float(0xffffff7fu), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print(      0xffffff80u, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print(      0xffffff80u); nc +=Serial.print(-float(0xffffff80u), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print(      0xffffff81u, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print(      0xffffff81u); nc +=Serial.print(-float(0xffffff81u), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print(      0xffffff90u, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print(      0xffffff90u); nc +=Serial.print(-float(0xffffff90u), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print(      0xffffffa0u, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print(      0xffffffa0u); nc +=Serial.print(-float(0xffffffa0u), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print(      0xfffffff0u, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print(      0xfffffff0u); nc +=Serial.print(-float(0xfffffff0u), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print(      0xffffffffu, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print(      0xffffffffu); nc +=Serial.print(-float(0xffffffffu), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.println("test positive/negative float nan & inf"); // see also http://en.wikipedia.org/wiki/IEEE_754-1985 and 
-  nc=Serial.print("0x"); nc +=Serial.print((signed long)0x7F800000, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print((signed long)0x7F800000l, FIELDSIZE(10)); nc +=Serial.print(_asFloat(0x7F800000), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print((signed long)0x7F800001, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print((signed long)0x7F800001l, FIELDSIZE(10)); nc +=Serial.print(_asFloat(0x7F800001), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print((signed long)0x7FC00000, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print((signed long)0x7FC00000l, FIELDSIZE(10)); nc +=Serial.print(_asFloat(0x7FC00000), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print((signed long)0x7FFFFFFF, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print((signed long)0x7FFFFFFFl, FIELDSIZE(10)); nc +=Serial.print(_asFloat(0x7FFFFFFF), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print((signed long)0xFF800000, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print((signed long)0xFF800000l, FIELDSIZE(10)); nc +=Serial.print(_asFloat(0xFF800000), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print((signed long)0xFF800001, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print((signed long)0xFF800001l, FIELDSIZE(10)); nc +=Serial.print(_asFloat(0xFF800001), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print((signed long)0xFFC00000, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print((signed long)0xFFC00000l, FIELDSIZE(10)); nc +=Serial.print(_asFloat(0xFFC00000), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
-  nc=Serial.print("0x"); nc +=Serial.print((signed long)0xFFFFFFFF, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" "); nc +=Serial.print((signed long)0xFFFFFFFFl, FIELDSIZE(10)); nc +=Serial.print(_asFloat(0xFFFFFFFF), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xffffff60, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" -"); nc +=Serial.print(             0xffffff60, FIELDSIZE(10)); nc +=Serial.print(  -float(0xffffff60), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xffffff70, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" -"); nc +=Serial.print(             0xffffff70, FIELDSIZE(10)); nc +=Serial.print(  -float(0xffffff70), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xffffff7f, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" -"); nc +=Serial.print(             0xffffff7f, FIELDSIZE(10)); nc +=Serial.print(  -float(0xffffff7f), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xffffff80, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" -"); nc +=Serial.print(             0xffffff80, FIELDSIZE(10)); nc +=Serial.print(  -float(0xffffff80), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xffffff81, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" -"); nc +=Serial.print(             0xffffff81, FIELDSIZE(10)); nc +=Serial.print(  -float(0xffffff81), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xffffff90, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" -"); nc +=Serial.print(             0xffffff90, FIELDSIZE(10)); nc +=Serial.print(  -float(0xffffff90), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xffffffa0, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" -"); nc +=Serial.print(             0xffffffa0, FIELDSIZE(10)); nc +=Serial.print(  -float(0xffffffa0), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xfffffff0, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" -"); nc +=Serial.print(             0xfffffff0, FIELDSIZE(10)); nc +=Serial.print(  -float(0xfffffff0), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xffffffff, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print(" -"); nc +=Serial.print(             0xffffffff, FIELDSIZE(10)); nc +=Serial.print(  -float(0xffffffff), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.println("test positive/negative float nan & inf"); // see also http://en.wikipedia.org/wiki/IEEE_754-1985 and
+  nc=Serial.print("0x"); nc +=Serial.print( 0x7F800000, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print("  "); nc +=Serial.print((long)0x7F800000, FIELDSIZE(10)); nc +=Serial.print(_asFloat(0x7F800000), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0x7F800001, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print("  "); nc +=Serial.print((long)0x7F800001, FIELDSIZE(10)); nc +=Serial.print(_asFloat(0x7F800001), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0x7FC00000, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print("  "); nc +=Serial.print((long)0x7FC00000, FIELDSIZE(10)); nc +=Serial.print(_asFloat(0x7FC00000), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0x7FFFFFFF, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print("  "); nc +=Serial.print((long)0x7FFFFFFF, FIELDSIZE(10)); nc +=Serial.print(_asFloat(0x7FFFFFFF), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xFF800000, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print("  "); nc +=Serial.print((long)0xFF800000, FIELDSIZE(10)); nc +=Serial.print(_asFloat(0xFF800000), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xFF800001, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print("  "); nc +=Serial.print((long)0xFF800001, FIELDSIZE(10)); nc +=Serial.print(_asFloat(0xFF800001), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xFFC00000, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print("  "); nc +=Serial.print((long)0xFFC00000, FIELDSIZE(10)); nc +=Serial.print(_asFloat(0xFFC00000), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
+  nc=Serial.print("0x"); nc +=Serial.print( 0xFFFFFFFF, HEX & FIELDSIZE(8) & FILLZEROS); nc +=Serial.print("  "); nc +=Serial.print((long)0xFFFFFFFF, FIELDSIZE(10)); nc +=Serial.print(_asFloat(0xFFFFFFFF), ff); nc +=Serial.print(" | "); nc +=Serial.println(nc,FIELDSIZE(2));
 
 #ifdef development_test_negative_nan_conversion
   float negnan = _asFloat(0xFFFFFFFF);
@@ -325,11 +325,11 @@ void printDemo()
   Serial.print(IPAddressFormatAdapter(0x21428418));
 
   Serial.println('\n');
-  Serial.println(F("Compiler checks: illegal format combinations are trapped as compilation errors, examples:"));
+  Serial.println(F("Compiler checks: an illegal PrintFormat usage is trapped as a compilation error:"));
   Serial.println(F("Serial.print(42, PRECISION(4));             // error: 'PrintFormat' is an inaccessible base of 'FloatFormat'"));
   Serial.println(F("Serial.print(42., HEX);                     // error: 'PrintFormat' is an inaccessible base of 'IntegerFormat'"));
   Serial.println(F("PrintFormat myFormat(HEX & PRECISION(4));   // error: ambiguous overload for 'operator&' (operand types are 'const IntegerFormat' and 'const FloatFormat')"));
-  Serial.println(F("// To test trapping of (almost) all illegal format combinations, compile with -DtestCompilationErrors"));
+  Serial.println(F("// To test trapping of (almost) all illegal PrintFormat usage, compile with -DtestCompilationErrors"));
 
 #ifdef testCompilationErrors
 // The following code will produce compilation errors, as it involves impossible PrintFormat combinations or conversions
@@ -382,7 +382,7 @@ void printDemo()
   (FIELDSIZE(4) + HEX + HEX + HEX) == (FIELDSIZE(4) + HEX);          // error : no match for 'operator+' (operand types are 'const PrintFormat' and 'const IntegerFormat')
 #endif
 
-  Serial.print(F("\nEnd PrintDemo... ==========================================================================================\n\n"));
+  Serial.print(F("\nEnd printDemo... ==========================================================================================\n\n"));
 }
 
 /* Still todo:

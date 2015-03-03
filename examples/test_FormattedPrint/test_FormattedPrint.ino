@@ -1,4 +1,4 @@
-void printTest();
+void printDemo();
 void printSequenceTeaser();
 
 void setup() {
